@@ -128,3 +128,35 @@ class CLI:
                     count = sock.send(buffer)
             ret = 1
         return ret
+    
+    def recvFile(self,sock):
+	  pjg 	 = 0
+	  msg1 	 = sock.recv(283).split(':')
+	  flag     = msg1[0].strip()
+	  namafile = msg1[1].strip()
+ 	  total	 = msg1[2].strip()
+	  user     = msg1[3].strip()	
+	  file 	 = namafile
+	  if flag == filFlag:
+	    try:
+		    f = open(file,'w')
+	    except:	    				
+		    ret = 0
+	    else:
+            try:
+                while 1:			
+                    leftToRead = int(total) - pjg	    
+                    if not leftToRead: break		
+                    msg = sock.recv(5000000)
+                    pjg = pjg + len(msg)
+                    f.write(msg)
+                f.close()	
+            except:			    
+                os.remove(file)		    
+                ret = 0
+		    else:
+		        ret = 1
+		    ret = 1	    
+	    return ret
+
+    
